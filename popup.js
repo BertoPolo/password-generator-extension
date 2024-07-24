@@ -11,14 +11,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (settings.length) {
       lengthInput.value = settings.length
       lengthValue.textContent = settings.length
+    } else {
+      lengthInput.value = 15
+      lengthValue.textContent = 15
     }
     if (settings.includeSymbols !== undefined) {
       symbolsCheckbox.checked = settings.includeSymbols
+    } else {
+      symbolsCheckbox.checked = false
     }
   })
 
   lengthInput.addEventListener("input", () => {
     lengthValue.textContent = lengthInput.value
+    saveSettings()
+  })
+
+  symbolsCheckbox.addEventListener("change", () => {
+    saveSettings()
   })
 
   generateButton.addEventListener("click", () => {
@@ -36,8 +46,14 @@ document.addEventListener("DOMContentLoaded", () => {
     resultElement.textContent = password
 
     // Save settings
-    chrome.storage.sync.set({ length, includeSymbols })
+    saveSettings()
   })
+
+  function saveSettings() {
+    const length = parseInt(lengthInput.value)
+    const includeSymbols = symbolsCheckbox.checked
+    chrome.storage.sync.set({ length, includeSymbols })
+  }
 })
 
 function generatePassword(length, includeSymbols) {
