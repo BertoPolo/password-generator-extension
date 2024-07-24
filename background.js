@@ -1,7 +1,7 @@
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "generatePassword",
-    title: "Generate a secure, random password",
+    title: "Generate a password",
     contexts: ["editable"],
   })
 })
@@ -9,8 +9,8 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "generatePassword") {
     chrome.storage.sync.get(["length", "includeSymbols"], (settings) => {
-      const length = settings.length || 12
-      const includeSymbols = settings.includeSymbols || false
+      const length = settings.length || 15
+      const includeSymbols = settings.includeSymbols || true
       const password = generatePassword(length, includeSymbols)
       chrome.tabs.executeScript(tab.id, {
         code: `document.activeElement.value = "${password}";`,
