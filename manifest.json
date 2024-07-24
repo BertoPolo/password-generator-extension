@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+  "name": "Password Generator",
+  "version": "1.2",
+  "description": "Generate secure passwords easily.",
+  "permissions": ["contextMenus", "activeTab", "storage"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.webp"
+  },
+  "icons": {
+    "48": "icon.png"
+  }
+}
