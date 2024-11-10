@@ -5,16 +5,19 @@
     <link rel="stylesheet" type="text/css" href="./styles.css" />
   </head>
   <body>
-    <h1>Password Generator</h1>
-    <label for="length">Length:</label>
-    <input type="range" id="length" min="8" max="30" value="8" />
-    <span id="lengthValue">8</span>
-    <br />
-    <label> <input type="checkbox" id="symbols" /> Include symbols </label>
-    <br />
-    <button id="generate">Generate</button>
-    <p id="result"></p>
-    <p id="error" class="error"></p>
-    <script src="popup.js"></script>
+    <div id="header"></div>
+    <div id="content">
+      <h1>Password Generator</h1>
+      <label for="length">Length:</label>
+      <input type="range" id="length" min="8" max="30" value="8" />
+      <span id="lengthValue">8</span>
+      <br />
+      <label> <input type="checkbox" id="symbols" /> Include symbols </label>
+      <br />
+      <button id="generate">Generate</button>
+      <p id="result"></p>
+      <p id="error" class="error"></p>
+      <script src="popup.js"></script>
+    </div>
   </body>
 </html>
