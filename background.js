@@ -1,13 +1,13 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "save_password") {
     const data = message.data
-    const blob = new Blob([data], { type: "text/plain" })
-    const url = URL.createObjectURL(blob)
+    const jsonBlob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
+    const url = URL.createObjectURL(jsonBlob)
 
     chrome.downloads.download(
       {
         url: url,
-        filename: "passwords.txt",
+        filename: "passwords.json",
       },
       () => {
         sendResponse({ success: true })
