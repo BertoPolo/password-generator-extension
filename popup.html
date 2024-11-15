@@ -1,23 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Password Generator</title>
-    <link rel="stylesheet" type="text/css" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div id="header"></div>
     <div id="content">
       <h1>Password Generator</h1>
+
       <label for="length">Length:</label>
-      <input type="range" id="length" min="8" max="30" value="8" />
-      <span id="lengthValue">8</span>
+      <input type="range" id="length" min="8" max="30" value="15" />
+      <span id="lengthValue">15</span>
       <br />
-      <label> <input type="checkbox" id="symbols" /> Include symbols </label>
+
+      <label><input type="checkbox" id="symbols" /> Include symbols</label>
       <br />
+
       <button id="generate">Generate</button>
       <p id="result"></p>
       <p id="error" class="error"></p>
-      <script src="popup.js"></script>
+
+      <div id="save-section" style="display: none">
+        <h2>Save Password</h2>
+        <label for="username">Username:</label>
+        <input type="text" id="username" placeholder="Enter username" required />
+        <br />
+
+        <label for="website">Website:</label>
+        <input type="text" id="website" placeholder="Enter website URL" required />
+        <br />
+
+        <button id="save-to-file">💾 Save to File</button>
+      </div>
     </div>
+
+    <script src="popup.js"></script>
   </body>
 </html>

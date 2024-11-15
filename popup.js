@@ -5,32 +5,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const generateButton = document.getElementById("generate")
   const resultElement = document.getElementById("result")
   const errorElement = document.getElementById("error")
+  const saveSection = document.getElementById("save-section")
+  const usernameInput = document.getElementById("username")
+  const websiteInput = document.getElementById("website")
+  const saveButton = document.getElementById("save-to-file")
 
   // Load saved settings
   chrome.storage.sync.get(["length", "includeSymbols"], (settings) => {
-    if (settings.length) {
-      lengthInput.value = settings.length
-      lengthValue.textContent = settings.length
-    } else {
-      lengthInput.value = 15
-      lengthValue.textContent = 15
-    }
-    if (settings.includeSymbols !== undefined) {
-      symbolsCheckbox.checked = settings.includeSymbols
-    } else {
-      symbolsCheckbox.checked = false
-    }
+    lengthInput.value = settings.length || 15
+    lengthValue.textContent = settings.length || 15
+    symbolsCheckbox.checked = settings.includeSymbols || false
   })
 
+  // Update length value dynamically
   lengthInput.addEventListener("input", () => {
     lengthValue.textContent = lengthInput.value
     saveSettings()
   })
 
-  symbolsCheckbox.addEventListener("change", () => {
-    saveSettings()
-  })
+  // Save settings when symbols are toggled
+  symbolsCheckbox.addEventListener("change", saveSettings)
 
+  // Generate password on button click
   generateButton.addEventListener("click", () => {
     const length = parseInt(lengthInput.value)
     const includeSymbols = symbolsCheckbox.checked
@@ -45,28 +41,53 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = generatePassword(length, includeSymbols)
     resultElement.textContent = password
 
-    // Save settings
-    saveSettings()
+    // Ask to save
+    saveSection.style.display = "block"
   })
 
+  // Save password to a file
+  saveButton.addEventListener("click", () => {
+    const username = usernameInput.value.trim()
+    const website = websiteInput.value.trim()
+    const password = resultElement.textContent.trim()
+
+    if (!username || !website || !password) {
+      alert("Please fill out all fields before saving.")
+      return
+    }
+
+    const passwordData = `Website: ${website}\nUsername: ${username}\nPassword: ${password}\n\n`
+
+    // Send a message to background.js to save the file
+    chrome.runtime.sendMessage({ action: "save_password", data: passwordData }, (response) => {
+      if (response && response.success) {
+        alert("Password saved successfully!")
+        saveSection.style.display = "none"
+      } else {
+        alert("Failed to save password.")
+      }
+    })
+  })
+
+  // Save settings
   function saveSettings() {
     const length = parseInt(lengthInput.value)
     const includeSymbols = symbolsCheckbox.checked
     chrome.storage.sync.set({ length, includeSymbols })
   }
-})
 
-function generatePassword(length, includeSymbols) {
-  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-  const symbols = "!@#$%^&*()_+[]{}|;:',.<>?"
-  const allChars = includeSymbols ? charset + symbols : charset
-  let password = ""
-  const cryptoObj = window.crypto
+  // Generate password
+  function generatePassword(length, includeSymbols) {
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    const symbols = "!@#$%^&*()_+[]{}|;:',.<>?"
+    const allChars = includeSymbols ? charset + symbols : charset
+    let password = ""
 
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor((cryptoObj.getRandomValues(new Uint32Array(1))[0] / (0xffffffff + 1)) * allChars.length)
-    password += allChars[randomIndex]
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * allChars.length)
+      password += allChars[randomIndex]
+    }
+
+    return password
   }
-
-  return password
-}
+})

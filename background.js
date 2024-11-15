@@ -1,35 +1,20 @@
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: "generatePassword",
-    title: "Generate a password",
-    contexts: ["editable"],
-  })
-})
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "save_password") {
+    const data = message.data
+    const blob = new Blob([data], { type: "text/plain" })
+    const url = URL.createObjectURL(blob)
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === "generatePassword") {
-    chrome.storage.sync.get(["length", "includeSymbols"], (settings) => {
-      const length = settings.length || 15
-      const includeSymbols = settings.includeSymbols || true
-      const password = generatePassword(length, includeSymbols)
-      chrome.tabs.executeScript(tab.id, {
-        code: `document.activeElement.value = "${password}";`,
-      })
-    })
+    chrome.downloads.download(
+      {
+        url: url,
+        filename: "passwords.txt",
+      },
+      () => {
+        sendResponse({ success: true })
+      }
+    )
+
+    // Keep the response channel open for async handling
+    return true
   }
 })
-
-function generatePassword(length, includeSymbols) {
-  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-  const symbols = "!@#$%^&*()_+[]{}|;:',.<>?"
-  const allChars = includeSymbols ? charset + symbols : charset
-  let password = ""
-  const cryptoObj = window.crypto
-
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor((cryptoObj.getRandomValues(new Uint32Array(1))[0] / (0xffffffff + 1)) * allChars.length)
-    password += allChars[randomIndex]
-  }
-
-  return password
-}
