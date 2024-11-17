@@ -23,3 +23,5 @@
 - Do not create a new file
 
 - Only choose once where to save passwords or do not let to choose, give an address by default
+
+- Browser stores the pass'?

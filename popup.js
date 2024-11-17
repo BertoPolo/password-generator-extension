@@ -56,18 +56,18 @@ document.addEventListener("DOMContentLoaded", () => {
       return
     }
 
-    // Crear un objeto JSON con los datos
-    const passwordData = {
+    const newPasswordData = {
+      id: Date.now(), // Unique ID based on timestamp
       website: website,
       username: username,
       password: password,
     }
 
-    // Send a message to background.js to save the file
-    chrome.runtime.sendMessage({ action: "save_password", data: passwordData }, (response) => {
+    chrome.runtime.sendMessage({ action: "save_password", data: newPasswordData }, (response) => {
       if (response && response.success) {
-        // alert("Password saved successfully!")
-        saveSection.style.display = "none"
+        alert("Password saved successfully!")
+        // Cierra el popup
+        chrome.runtime.sendMessage({ action: "close_popup" })
       } else {
         alert("Failed to save password.")
       }

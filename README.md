@@ -2,7 +2,7 @@
 
 ## Description
 
-This browser extension is designed to generate secure passwords directly from your browser. You can customize the length of the password and choose whether or not to include symbols.
+This browser extension generates secure passwords and saves them automatically in a `passwords.json` file. You can customize the password length and decide whether to include symbols. All saved passwords are stored locally within the browser and exported to a single file.
 
 ## Technologies Used
 
@@ -19,22 +19,24 @@ Developed by Alberto Polo. I welcome feedback and suggestions to improve this ex
 
 1. **Installation**: Download the extension from the Chrome Web Store.
 2. **Generate Password**:
-   - Open the extension by clicking on the icon in the toolbar.
+   - Open the extension by clicking the icon in the toolbar.
    - Use the slider to select the password length.
-   - Check the box if you want to include symbols.
-   - Click "Generate" to get a secure password.
-3. **Generate Password from a Password Field**:
-   - Right-click on any password input field on a webpage.
-   - Select "Generate secure password" from the context menu.
-   - The generated password will be automatically filled in the field.
+   - Check the box to include symbols if desired.
+   - Click "Generate" to create a secure password.
+   - Fill in the username and website details.
+   - Click the save button to save the password to `passwords.json`.
+3. **Automatic Export**:
+   - Passwords are automatically saved to the file `passwords.json` in the browser's default downloads folder.
 
 ## Compatible Browsers
 
 - **Google Chrome**
 - **Brave**
-- **Mozilla Firefox** (with minor adjustments)
+- **Mozilla Firefox**
 - **Microsoft Edge**
 - **Opera**
+
+> **Note**: This extension is designed for Chromium-based browsers. Compatibility with Mozilla Firefox may require adjustments.
 
 ## Contributions
 
