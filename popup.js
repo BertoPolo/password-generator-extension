@@ -65,8 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     chrome.runtime.sendMessage({ action: "save_password", data: newPasswordData }, (response) => {
       if (response && response.success) {
-        alert("Password saved successfully!")
-        // Cierra el popup
         chrome.runtime.sendMessage({ action: "close_popup" })
       } else {
         alert("Failed to save password.")
@@ -94,5 +92,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     return password
+  }
+
+  function encryptPassword(password) {
+    const iv = crypto.getRandomValues(new Uint8Array(ivLength))
+    const encoder = new TextEncoder()
+    const keyData = encoder.encode(encryptionKey)
+    return crypto.subtle.importKey("raw", keyData, "AES-GCM", false, ["encrypt"]).then((key) => {
+      return crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, encoder.encode(password)).then((encrypted) => {
+        return { encrypted: btoa(String.fromCharCode(...new Uint8Array(encrypted))), iv: btoa(String.fromCharCode(...iv)) }
+      })
+    })
+  }
+
+  function decryptPassword(encryptedData) {
+    const { encrypted, iv } = encryptedData
+    const encoder = new TextEncoder()
+    const keyData = encoder.encode(encryptionKey)
+    const buffer = Uint8Array.from(atob(encrypted), (c) => c.charCodeAt(0))
+    const ivBuffer = Uint8Array.from(atob(iv), (c) => c.charCodeAt(0))
+    return crypto.subtle.importKey("raw", keyData, "AES-GCM", false, ["decrypt"]).then((key) => {
+      return crypto.subtle.decrypt({ name: "AES-GCM", iv: ivBuffer }, key, buffer).then((decrypted) => {
+        return new TextDecoder().decode(decrypted)
+      })
+    })
   }
 })

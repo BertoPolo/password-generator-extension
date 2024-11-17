@@ -8,8 +8,6 @@
 
 - Fix README
 
-- Passwords saver
-
 - Encrypt pass
 
 - Pass to arrow functions?
@@ -25,3 +23,5 @@
 - Only choose once where to save passwords or do not let to choose, give an address by default
 
 - Browser stores the pass'?
+
+- if saving fails, send why or what did fail
